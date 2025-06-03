@@ -5,7 +5,13 @@ const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
 
 // Load service account JSON from environment variable
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+const serviceAccountRaw = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+
+// Fix the private key by replacing escaped newlines with actual newlines
+const serviceAccount = {
+  ...serviceAccountRaw,
+  private_key: serviceAccountRaw.private_key.replace(/\\n/g, '\n')
+};
 
 initializeApp({
   credential: cert(serviceAccount),
