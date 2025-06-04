@@ -24,9 +24,9 @@ app.use(bodyParser.json());
 
 // POST endpoint to receive bin updates
 app.post('/api/bin-update', async (req, res) => {
-  const { binId, fillLevel } = req.body;
+  const { binId, binName, fillLevel } = req.body;
 
-  if (!binId || fillLevel == null) {
+  if (!binId || fillLevel == null || !binName) {
     return res.status(400).json({ error: 'Missing binId or fillLevel' });
   }
 
@@ -36,6 +36,7 @@ app.post('/api/bin-update', async (req, res) => {
   try {
     await binRef.set(
       {
+        location: binName,
         fillLevel,
         isFull,
         lastUpdated: new Date(),
